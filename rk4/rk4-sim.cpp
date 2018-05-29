@@ -73,7 +73,7 @@ void rk4(std::vector<double> & pos, std::vector<double> & vel, const double tini
   const int N =(int)(tend-tini)/dt;
 
   //calculo
-  for (int nt = 0; nt < 2*N; ++nt) {
+  for (int nt = 0; nt < 1*N; ++nt) {
     double t = tini + dt*nt;
     
     // k1
@@ -118,10 +118,10 @@ void rk4(std::vector<double> & pos, std::vector<double> & vel, const double tini
     }
     
     std::cout << t  << " ";
-    //print(pos);
-    //print(vel);
-    plot_gnuplot(pos);
-    plot_gnuplot(vel);
+    print(pos);
+    print(vel);
+    //plot_gnuplot(pos);
+    // plot_gnuplot(vel);
     std::cout << "\n";
   }
   
