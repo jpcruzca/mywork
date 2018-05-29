@@ -22,13 +22,13 @@ void dp54(std::vector<double> & pos, std::vector<double> & vel, const double tin
   double dt=0.001;
   
   //calculo
-  for (int tt=0;tt<13500;tt++)
+  for (int tt=0;tt<137;tt++)
     {
       double t = tini + dt*tt;
       
       // k1
       for(int ii = 0; ii < vel.size(); ++ii) {
-	k1[ii+3] = dt*compute(pos, vel,t, ii+1);
+	k1[ii+3] = dt*compute(pos, vel,t, ii+1);//deberia ser diferente.
 	k1[ii] = dt*compute(pos, vel,t, ii+4);
       }
       // k2 aux
@@ -73,7 +73,7 @@ void dp54(std::vector<double> & pos, std::vector<double> & vel, const double tin
       }      
       // k6 aux
       for(int ii = 0; ii < vel.size(); ++ii) {
-	vaux[ii] = vel[ii] + 9017*k1[ii+3]/3168 - 355*k2[ii+1]/33 + 46732*k3[ii+3]/5247 + 49*k4[ii+3]/176 - 5103*k5[ii+3]/18656;
+	vaux[ii] = vel[ii] + 9017*k1[ii+3]/3168 - 355*k2[ii+3]/33 + 46732*k3[ii+3]/5247 + 49*k4[ii+3]/176 - 5103*k5[ii+3]/18656;
 	paux[ii] = pos[ii] + 9017*k1[ii]/3168 - 355*k2[ii]/33 + 46732*k3[ii]/5247 + 49*k4[ii]/176 - 5103*k5[ii]/18656;
       }
       //k6
@@ -97,7 +97,7 @@ void dp54(std::vector<double> & pos, std::vector<double> & vel, const double tin
 	vel[ii] = vel[ii] + 35*k1[ii+3]/384 + 500*k3[ii+3]/1113 + 125*k4[ii+3]/192 - 2187*k5[ii+3]/6784 + 11*k6[ii+3]/84;
       }
       
-      /*      //errores
+            //errores
       for (int ii = 0; ii < vel.size(); ++ii)
 	{
 	  vaux[ii] = 71*k1[ii+3]/57600 - 71*k3[ii+3]/16695 + 71*k4[ii+3]/1920 - 17253*k5[ii+3]/339200 + 22*k6[ii+3]/525 - k7[ii+3]/40;
@@ -108,10 +108,10 @@ void dp54(std::vector<double> & pos, std::vector<double> & vel, const double tin
       vzy = norm(vaux);
       
       //new dt
-      dt=dtnew(pzy, vzy, dt); */
+      dt=dtnew(pzy, vzy, dt); 
 
       //print
-      std::cout << t  << " ";
+      std::cout <<dt<<" "<< t  << " ";
       print(pos);
       print(vel);
       std::cout << "\n";
@@ -179,25 +179,22 @@ double svar(const std::vector<double> & pos, const std::vector<double> & vel)
 double saux(const double x, const double dt)
 {
   double aux = eps*dt/(2*std::fabs(x));
-  return std::pow(aux, 1/5); 
+  return std::pow(aux, 1.0/5.0); 
 }
 
 double dtnew(const double p, const double v, const double dt)
 {
   double sprom = (saux(p,dt) + saux(v,dt))/2.0;
-  if(sprom >= 2.0){
-    return 2.0*dt;
-  }
-  if(1.0 <= sprom < 2.0){
-    return dt;
-  }
-  if(sprom < 1.0){
-    return sprom*dt/2.0;
-  }
-  else{
-    std::cerr << "Error en dtnew!!!! tonto humano" << "\n";
-    exit(1);
-  }
+  double hp=0.001;
+  double hg=0.138;
+  if(dt*sprom <=hp)
+    return hp;
+  else if (dt*sprom >=hg)
+    return hg;
+  else
+    return dt*sprom;
+  //*/
+  //return sprom*dt;
 }
 
 double norm(const std::vector<double> & x)
