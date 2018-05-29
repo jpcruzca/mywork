@@ -111,7 +111,7 @@ void dp54(std::vector<double> & pos, std::vector<double> & vel, const double tin
       dt=dtnew(pzy, vzy, dt); 
 
       //print
-      std::cout <<dt<<" "<< t  << " ";
+      std::cout<< t  << " ";
       print(pos);
       print(vel);
       std::cout << "\n";
